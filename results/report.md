@@ -1,7 +1,7 @@
 # AI Image Model Benchmark
 
-**Run:** 2026-05-16T20:06:19.101Z
-**Prompt:** A photorealistic image of a golden retriever puppy sitting in a sunflower field at golden hour, with a soft bokeh background and warm light. Aspect ratio: 1:1, size: 1024x1024.
+**Run:** 2026-05-16T20:06:19.101Z  
+**Prompt:** A photorealistic image of a golden retriever puppy sitting in a sunflower field at golden hour, with a soft bokeh background and warm light. Aspect ratio: 1:1, size: 1024x1024.  
 
 | Model | Price | Latency | Image |
 | ----- | ----- | ------- | ----- |
@@ -33,5 +33,5 @@
 
 **Total spent:** $1.8116689
 
-_The latency here is wall time, measured by the benchmark script._
+_The latency here is wall time, measured by the benchmark script._  
 _The cost, however, is returned by the gateway, so it should be accurate._
