@@ -118,7 +118,7 @@ export async function generateCharts(opts: ChartOptions): Promise<string[]> {
           tooltip: { enabled: false },
           subtitle: {
             display: true,
-            text: 'by @kometolabs and @kkomelin',
+            text: '@kometolabs & @kkomelin',
             position: 'bottom',
             align: 'center',
             color: '#9ca3af',
