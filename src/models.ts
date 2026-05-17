@@ -10,7 +10,7 @@ const models: ModelConfig[] = [
     name: 'Wan v2.6 T2V',
     provider: 'Alibaba',
     notes: '720p/1080p; rejects `aspectRatio`, uses `resolution` only',
-    enabled: true,
+    enabled: false,
     // Alibaba Wan rejects `aspectRatio`; size is set via `resolution`.
     skipAspectRatio: true,
     providerOptions: { alibaba: { pollTimeoutMs: 900_000 } },
@@ -20,7 +20,7 @@ const models: ModelConfig[] = [
     name: 'Seedance 2.0',
     provider: 'ByteDance',
     notes: 'Token-based pricing; multi-modal input',
-    enabled: true,
+    enabled: false,
     providerOptions: { bytedance: { pollTimeoutMs: 900_000 } },
   },
   {
@@ -28,7 +28,7 @@ const models: ModelConfig[] = [
     name: 'Veo 3.1',
     provider: 'Google',
     notes: 'Requires generateAudio; duration in {4,6,8}; resolution as 720p/1080p',
-    enabled: true,
+    enabled: false,
     // Veo accepts only 4/6/8 seconds.
     duration: 4,
     // Veo expects '720p'/'1080p', not WxH.
@@ -42,18 +42,19 @@ const models: ModelConfig[] = [
     provider: 'KlingAI',
     notes: 'Standard mode; rejects `resolution`, uses `aspectRatio` only',
     enabled: true,
-    // Kling v2.x/v3.x duration must be 5 or 10.
+    // Kling duration: v2.x must be 5 or 10; v3.0 allows 3-15. 5s works for both.
     duration: 5,
     // Kling does not accept the `resolution` parameter.
     skipResolution: true,
-    providerOptions: { klingai: { mode: 'std', pollTimeoutMs: 900_000 } },
+    // `sound: 'on'` enables audio (defaults to 'off'); adds ~50% to per-second cost.
+    providerOptions: { klingai: { mode: 'std', sound: 'on', pollTimeoutMs: 900_000 } },
   },
   {
     id: 'xai/grok-imagine-video',
     name: 'Grok Imagine Video',
     provider: 'xAI',
     notes: '720p ceiling, duration 1-15s',
-    enabled: true,
+    enabled: false,
     providerOptions: { xai: { pollTimeoutMs: 900_000 } },
   },
 ]

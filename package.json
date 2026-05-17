@@ -5,6 +5,7 @@
   "scripts": {
     "start": "bun run src/cli.ts",
     "dev": "bun --watch run src/cli.ts",
+    "charts": "bun run src/charts.ts",
     "typecheck": "tsc --noEmit",
     "format": "biome format --write src/"
   },

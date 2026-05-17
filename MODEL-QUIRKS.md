@@ -57,6 +57,12 @@ Documented workarounds for non-standard behavior across video generation provide
 
 ---
 
+**Quirk:** Audio is opt-in via `providerOptions.klingai.sound` (a string, `'on'` or `'off'`, not a boolean). Defaults to `'off'`, so output is silent unless explicitly enabled. Requires v2.6+ and adds ~50% to the per-second cost (v3.0 std: $0.168/s → $0.252/s). The internal gateway pricing JSON uses `audio: true/false`, but the SDK field is `sound`.
+
+**Adaptation:** `providerOptions: { klingai: { sound: 'on' } }` on the model entry.
+
+---
+
 ## Alibaba Wan v2.6 t2v
 
 **Quirk:** Rejects the `aspectRatio` parameter. Size is set via `resolution` or `providerOptions.alibaba`. Passing `aspectRatio` triggers an AI SDK warning and the field is dropped.
