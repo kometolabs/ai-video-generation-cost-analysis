@@ -1,5 +1,4 @@
 import path from 'node:path'
-import { config } from './config.js'
 import type { RunResult } from './types.js'
 
 function formatPrice(cost?: string): string {
@@ -22,10 +21,6 @@ export async function writeReport(prompt: string, results: RunResult[], reportPa
     const model = `\`${r.model.id}\``
     const price = formatPrice(r.cost)
     const latency = r.success ? `${(r.wallLatencyMs / 1000).toFixed(1)}s` : 'FAILED'
-    const duration = `${r.model.duration ?? config.duration}s`
-    const resolution = r.model.skipResolution
-      ? `(${r.model.aspectRatio ?? config.aspectRatio})`
-      : (r.model.resolution ?? config.resolution)
 
     let video = '-'
     if (r.savedVideos[0]) {
@@ -33,7 +28,7 @@ export async function writeReport(prompt: string, results: RunResult[], reportPa
       video = `<video src="${src}" controls width="320"></video>`
     }
 
-    return `| ${model} | ${price} | ${latency} | ${duration} | ${resolution} | ${video} |`
+    return `| ${model} | ${price} | ${latency} | ${video} |`
   })
 
   const totalCost = results.reduce((sum, r) => sum + (r.cost != null ? parseFloat(r.cost) : 0), 0)
@@ -48,8 +43,8 @@ export async function writeReport(prompt: string, results: RunResult[], reportPa
     `**Run:** ${new Date().toISOString()}${br}`,
     `**Prompt:** ${prompt}`,
     ``,
-    `| Model | Cost | Latency | Duration | Resolution | Video |`,
-    `| ----- | ---- | ------- | -------- | ---------- | ----- |`,
+    `| Model | Cost | Latency | Video |`,
+    `| ----- | ---- | ------- | ----- |`,
     ...rows,
     ``,
     `**Total spent:** ${totalCostStr}`,

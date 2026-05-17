@@ -28,7 +28,7 @@ const FONT = 'Inter, sans-serif'
 const BG = '#ffffff'
 
 // Parses the Markdown comparison table from report.md.
-// Expects rows shaped as: | `model/id` | $price | latencys | Xs | resolution | video |
+// Expects rows shaped as: | `model/id` | $price | latencys | video |
 // Failed rows (latency = "FAILED") and rows without a numeric price are dropped.
 function parseReport(md: string): ReportRow[] {
   const rows = md

@@ -87,7 +87,6 @@ The CLI prints progress for each model and runs three phases:
    - model ID
    - cost (gateway-reported when available)
    - latency (wall-clock seconds, measured by the client)
-   - configured video duration and resolution
    - inline `<video controls>` tag pointing to the saved `.mp4`
 3. **Charts** - renders cost and latency bar charts to `./results/videos/charts/{cost.png, latency.png}`.
 
