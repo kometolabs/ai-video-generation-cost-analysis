@@ -30,10 +30,14 @@ export async function runGenerateVideo(
     const callArgs: Parameters<typeof generateVideo>[0] = {
       model: gateway.video(model.id),
       prompt,
-      aspectRatio: (model.aspectRatio ?? opts.defaults.aspectRatio) as Parameters<
-        typeof generateVideo
-      >[0]['aspectRatio'],
       duration: model.duration ?? opts.defaults.duration,
+    }
+
+    // Omit `aspectRatio` for providers that reject it (e.g. Alibaba Wan).
+    if (!model.skipAspectRatio) {
+      callArgs.aspectRatio = (model.aspectRatio ?? opts.defaults.aspectRatio) as Parameters<
+        typeof generateVideo
+      >[0]['aspectRatio']
     }
 
     // Omit `resolution` for providers that reject it (e.g. Kling).

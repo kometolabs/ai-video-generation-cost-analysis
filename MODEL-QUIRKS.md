@@ -57,6 +57,18 @@ Documented workarounds for non-standard behavior across video generation provide
 
 ---
 
+## Alibaba Wan v2.6 t2v
+
+**Quirk:** Rejects the `aspectRatio` parameter. Size is set via `resolution` or `providerOptions.alibaba`. Passing `aspectRatio` triggers an AI SDK warning and the field is dropped.
+
+**Symptom:** `AI SDK Warning (gateway / alibaba/wan-v2.6-t2v): The feature "aspectRatio" is not supported.`
+
+**Adaptation:** Per-model flag `skipAspectRatio: true` in `src/models.ts` - the runner omits the field entirely.
+
+**Code:** `src/runners/generateVideo.ts` - `if (!model.skipAspectRatio)` branch.
+
+---
+
 ## xAI Grok Imagine Video
 
 **Quirk:** 720p ceiling. Requesting higher resolutions silently downscales or errors depending on the path.

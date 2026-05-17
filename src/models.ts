@@ -9,8 +9,10 @@ const models: ModelConfig[] = [
     id: 'alibaba/wan-v2.6-t2v',
     name: 'Wan v2.6 T2V',
     provider: 'Alibaba',
-    notes: '720p/1080p',
+    notes: '720p/1080p; rejects `aspectRatio`, uses `resolution` only',
     enabled: true,
+    // Alibaba Wan rejects `aspectRatio`; size is set via `resolution`.
+    skipAspectRatio: true,
     providerOptions: { alibaba: { pollTimeoutMs: 900_000 } },
   },
   {

@@ -16,6 +16,9 @@ export interface ModelConfig {
   // Set true for providers that reject the `resolution` parameter (e.g. KlingAI).
   // The runner omits `resolution` entirely when this is set.
   skipResolution?: boolean
+  // Set true for providers that reject the `aspectRatio` parameter (e.g. Alibaba Wan).
+  // The runner omits `aspectRatio` entirely when this is set.
+  skipAspectRatio?: boolean
   // Provider-specific options passed directly to generateVideo's providerOptions.
   providerOptions?: Record<string, Record<string, JSONValue>>
 }
