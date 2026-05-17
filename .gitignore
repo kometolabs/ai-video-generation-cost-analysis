@@ -3,5 +3,3 @@ logs/
 dist/
 .env
 .env.local
-
-results/images/captioned/

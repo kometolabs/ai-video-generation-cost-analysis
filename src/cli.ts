@@ -4,9 +4,7 @@ import { config } from './config.js'
 import { writeReport } from './logger.js'
 import { allModels } from './models.js'
 import { generateCharts } from './phases/generateCharts.js'
-import { generateThumbnails } from './phases/generateThumbnails.js'
-import { runGenerateImage } from './runners/generateImage.js'
-import { runGenerateText } from './runners/generateText.js'
+import { runGenerateVideo } from './runners/generateVideo.js'
 import type { RunResult } from './types.js'
 
 if (!process.env['AI_GATEWAY_API_KEY']) {
@@ -15,7 +13,6 @@ if (!process.env['AI_GATEWAY_API_KEY']) {
 }
 
 const outputDir = path.resolve(config.outputDir)
-const thumbnailDir = path.resolve(config.thumbnailDir)
 const chartsDir = path.resolve(config.chartsDir)
 const reportPath = path.resolve(config.reportPath)
 const resultsDir = path.dirname(reportPath)
@@ -29,25 +26,21 @@ console.log(`Models: ${allModels.length}\n`)
 const results: RunResult[] = []
 
 for (const model of allModels) {
-  process.stdout.write(`  [${model.type}] ${model.name} (${model.id}) ... `)
+  process.stdout.write(`  ${model.name} (${model.id}) ... `)
 
-  const result =
-    model.type === 'generateText'
-      ? await runGenerateText(model, config.prompt, {
-          outputDir,
-          saveImages: true,
-        })
-      : await runGenerateImage(model, config.prompt, {
-          outputDir,
-          saveImages: true,
-          n: config.n,
-          aspectRatio: config.aspectRatio,
-          size: config.size,
-        })
+  const result = await runGenerateVideo(model, config.prompt, {
+    outputDir,
+    saveVideos: true,
+    defaults: {
+      aspectRatio: config.aspectRatio,
+      resolution: config.resolution,
+      duration: config.duration,
+    },
+  })
 
   if (result.success) {
     const cost = result.cost != null ? ` $${result.cost}` : ''
-    console.log(`OK ${(result.wallLatencyMs / 1000).toFixed(2)}s*, ${result.imageCount} image(s)${cost}`)
+    console.log(`OK ${(result.wallLatencyMs / 1000).toFixed(2)}s*, ${result.videoCount} video(s)${cost}`)
   } else {
     console.log(`FAILED: ${result.error?.slice(0, 70)}`)
   }
@@ -60,11 +53,7 @@ for (const model of allModels) {
   }
 }
 
-console.log('\nGenerating thumbnails...')
-const thumbnails = await generateThumbnails(results, { thumbnailDir })
-console.log(`  ${thumbnails.length} new thumbnail(s) -> ${thumbnailDir}`)
-
-const absReportPath = await writeReport(config.prompt, results, reportPath, { thumbnailDir })
+const absReportPath = await writeReport(config.prompt, results, reportPath)
 console.log(`\nReport: ${absReportPath}`)
 
 console.log('\nGenerating charts...')

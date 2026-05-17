@@ -1,124 +1,67 @@
 # Model Quirks and Adaptations
 
-Documented workarounds for non-standard behavior across image generation providers.
+Documented workarounds for non-standard behavior across video generation providers.
+
+> **Long-running calls:** Video jobs can hold the connection open for several minutes. Node's default Undici `headersTimeout`/`bodyTimeout` (5 min) closes them early. We use a custom `gateway` in [`src/gateway.ts`](./src/gateway.ts) with a 15-minute Undici `Agent` to keep long fetches alive.
 
 ---
 
-## Black Forest Labs - All Flux models
+## Google Veo 3.1
 
-**Quirk:** BFL's API natively accepts `width` and `height` in pixels. It does not support
-the `aspectRatio` string parameter that the Vercel AI SDK passes by default.
+**Quirk:** `duration` must be one of `{4, 6, 8}`. Passing the global default `5` returns HTTP 400.
 
-**Symptom:** Requesting `aspectRatio: '1:1'` maps to a small internal preset (not 1024x1024).
-The BFL default output is 1024x768 (landscape), not square.
-
-**Adaptation:** Pass explicit pixel dimensions via `providerOptions.blackForestLabs`:
-```ts
-providerOptions: { blackForestLabs: { width: 1024, height: 1024 } }
-```
-
-**Constraints:** Width and height must be multiples of 32, between 256 and 1440px.
-
-**Affected models:** `bfl/flux-pro-1.1` (and likely all other `bfl/*` models)
-
-**Code:** `src/models.ts` - `providerOptions` field on BFL model entries
+**Adaptation:** Per-model override `duration: 4` in `src/models.ts`.
 
 ---
 
-## Recraft - V4 Pro
+**Quirk:** `resolution` expects the strings `'720p'` or `'1080p'`. The `WxH` format used by most other models is rejected.
 
-**Quirk:** `recraft-v4-pro` is a 2x-resolution model. It does not accept `1024x1024`
-as a valid size - its minimum square output is `2048x2048`.
-
-**Symptom:** Passing `size: '1024x1024'` returns HTTP 400 Bad Request.
-
-**Adaptation:** Override the global size with a model-level `size` field:
-```ts
-size: '2048x2048'
-```
-
-**Affected models:** `recraft/recraft-v4-pro`
-
-**Code:** `src/models.ts` - `size` field; `src/runners/generateImage.ts` - `model.size ?? opts.size`
+**Adaptation:** Per-model override `resolution: '720p'` in `src/models.ts`.
 
 ---
 
-## Recraft, OpenAI - size param instead of aspectRatio
+**Quirk:** Veo 3.x requires `providerOptions.vertex.generateAudio` to be set explicitly.
 
-**Quirk:** Recraft and OpenAI models require the `size` parameter (e.g. `'1024x1024'`)
-rather than `aspectRatio` (e.g. `'1:1'`). Passing `aspectRatio` is silently ignored or errors.
-
-**Adaptation:** Set `preferSize: true` on the model config. The runner then passes
-`size` instead of `aspectRatio`.
-
-**Affected models:** `recraft/recraft-v3`, `recraft/recraft-v4`, `recraft/recraft-v4-pro`, `openai/gpt-image-1`
-
-**Confirmed via:** SDK warning `"The feature 'aspectRatio' is not supported. Use size instead."` on recraft-v3 and recraft-v4.
-
-**Code:** `src/models.ts` - `preferSize` field; `src/runners/generateImage.ts` - `dimensionParam`
+**Adaptation:** `providerOptions: { vertex: { generateAudio: true } }` in `src/models.ts`.
 
 ---
 
-## xAI - aspectRatio only, no size param
+## KlingAI v2.6 t2v
 
-**Quirk:** xAI Grok models only support `aspectRatio`. Passing `size` is not supported
-and will error.
+**Quirk:** Does not accept the `resolution` parameter. Uses `aspectRatio` only.
 
-**Adaptation:** These models do NOT set `preferSize: true`, so they always use the
-`aspectRatio` path in the runner.
+**Symptom:** Passing `resolution` errors out.
 
-**Affected models:** `xai/grok-imagine-image`, `xai/grok-imagine-image-pro`
+**Adaptation:** Per-model flag `skipResolution: true` in `src/models.ts` - the runner omits the field entirely for this model.
 
-**Code:** `src/models.ts` - comment on xAI section
+**Code:** `src/runners/generateVideo.ts` - `if (!model.skipResolution)` branch.
 
 ---
 
-## xAI - grok-imagine-image-pro fails when run last in the model list
+**Quirk:** v2.x `duration` must be `5` or `10`.
 
-**Quirk:** `xai/grok-imagine-image-pro` intermittently returns a failure (Service Unavailable)
-when it runs after a long sequence of other models in the same benchmark run. The root cause
-is unclear - possibly rate limiting, session timeout, or provider-side queue behavior.
-
-**Symptom:** The model succeeds when run in isolation but fails at the end of a full run.
-
-**Adaptation:** Run `xai/grok-imagine-image-pro` in a separate isolated run with all other
-models disabled (`enabled: false`).
+**Adaptation:** Explicit `duration: 5` in the model entry (matches global default, kept explicit as a guard against future global changes).
 
 ---
 
-## Prodia - flux-fast-schnell failed to generate during the latest run
+**Quirk:** `mode` defaults to `'std'`. Setting `'pro'` is significantly more expensive but higher quality.
 
-**Quirk:** `prodia/flux-fast-schnell` - normally the cheapest model in the
-benchmark - failed to generated an image during the latest run while every other enabled model
-succeeded.
-
-**Adaptation:** None on our side - the issue was reported to Vercel. Track the report
-and re-enable in subsequent runs to verify resolution.
+**Adaptation:** `providerOptions: { klingai: { mode: 'std' } }` kept explicit so cost is predictable.
 
 ---
 
-## Google Gemini - duplicate images in result.files
+## xAI Grok Imagine Video
 
-**Quirk:** When calling `generateText` with a Gemini image model, the Vercel AI SDK
-can add the same image twice to `result.files` during response transformation. This is
-a known SDK-level issue with how Gemini response parts are mapped.
+**Quirk:** 720p ceiling. Requesting higher resolutions silently downscales or errors depending on the path.
 
-**Symptom:** The run reports 2 images saved, but both files are byte-identical.
+**Adaptation:** None - the global default of `1280x720` already fits.
 
-**Adaptation:** Deduplicate `result.files` by comparing the first 64 base64 chars
-of each image's binary content before saving:
-```ts
-const seen = new Set<string>()
-const imageFiles = (result.files ?? [])
-  .filter((f) => f.mediaType?.startsWith('image/'))
-  .filter((f) => {
-    const key = Buffer.from(f.uint8Array).toString('base64').slice(0, 64)
-    if (seen.has(key)) return false
-    seen.add(key)
-    return true
-  })
-```
+---
 
-**Affected models:** All `generateText`-type models (Google Gemini family)
+**Quirk:** `duration` accepted range is 1-15 seconds.
 
-**Code:** `src/runners/generateText.ts` - deduplication block
+**Adaptation:** None - the global default of `5` is within range.
+
+---
+
+**Quirk:** Returns ephemeral hosted URLs. The Vercel AI SDK materializes `uint8Array`/`base64` from those URLs during the call, so the saved file on disk does not depend on the URL remaining live. If `uint8Array` ever comes back empty, the runner would need a fallback fetch on `video.url`.

@@ -1,9 +1,6 @@
 import path from 'node:path'
+import { config } from './config.js'
 import type { RunResult } from './types.js'
-
-export interface ReportOptions {
-  thumbnailDir: string
-}
 
 function formatPrice(cost?: string): string {
   if (cost == null) return '-'
@@ -13,12 +10,7 @@ function formatPrice(cost?: string): string {
   return `$${cleaned}`
 }
 
-export async function writeReport(
-  prompt: string,
-  results: RunResult[],
-  reportPath: string,
-  opts: ReportOptions,
-): Promise<string> {
+export async function writeReport(prompt: string, results: RunResult[], reportPath: string): Promise<string> {
   const reportDir = path.dirname(path.resolve(reportPath))
   const toRel = (p: string) => {
     const rel = path.relative(reportDir, path.resolve(p))
@@ -28,21 +20,19 @@ export async function writeReport(
 
   const rows = results.map((r) => {
     const model = `\`${r.model.id}\``
-    const price = formatPrice(r.cost);
-    const latency = r.success
-      ? `${(r.wallLatencyMs / 1000).toFixed(1)}s`
-      : "FAILED";
+    const provider = r.model.provider
+    const price = formatPrice(r.cost)
+    const latency = r.success ? `${(r.wallLatencyMs / 1000).toFixed(1)}s` : 'FAILED'
+    const duration = `${r.model.duration ?? config.duration}s`
+    const resolution = r.model.skipResolution ? `(${r.model.aspectRatio ?? config.aspectRatio})` : (r.model.resolution ?? config.resolution)
 
-    let image = "-";
-    if (r.savedImages[0]) {
-      const basename = path.basename(r.savedImages[0]);
-      const full = toRel(r.savedImages[0])
-      const thumb = toRel(path.join(opts.thumbnailDir, basename))
-      image = `[![${r.model.name}](${thumb})](${full})`;
-      if (r.model.size) image += ` (${r.model.size})`;
+    let video = '-'
+    if (r.savedVideos[0]) {
+      const src = toRel(r.savedVideos[0])
+      video = `<video src="${src}" controls width="320"></video>`
     }
 
-    return `| ${model} | ${price} | ${latency} | ${image} |`
+    return `| ${model} | ${provider} | ${price} | ${latency} | ${duration} | ${resolution} | ${video} |`
   })
 
   const totalCost = results.reduce((sum, r) => sum + (r.cost != null ? parseFloat(r.cost) : 0), 0)
@@ -52,20 +42,21 @@ export async function writeReport(
   const br = '  '
 
   const md = [
-    `# AI Image Model Benchmark`,
+    `# AI Video Model Benchmark`,
     ``,
     `**Run:** ${new Date().toISOString()}${br}`,
     `**Prompt:** ${prompt}`,
     ``,
-    `| Model | Price | Latency | Image |`,
-    `| ----- | ----- | ------- | ----- |`,
+    `| Model | Provider | Cost | Latency | Duration | Resolution | Video |`,
+    `| ----- | -------- | ---- | ------- | -------- | ---------- | ----- |`,
     ...rows,
     ``,
     `**Total spent:** ${totalCostStr}`,
     ``,
-    `_The latency here is wall time, measured by the benchmark script._${br}`,
-    `_The cost, however, is returned by the gateway, so it should be accurate._`,
-  ].join("\n");
+    `_Latency is wall time per video, measured by the benchmark script._${br}`,
+    `_Cost is returned by the gateway, so it should be accurate._${br}`,
+    `_Videos are embedded as HTML5 \`<video>\` tags - GitHub renders them inline._`,
+  ].join('\n')
 
   await Bun.write(reportPath, md)
   return path.resolve(reportPath)

@@ -1,36 +1,31 @@
-// Text models need these in the prompt, so we'll use constants.
-const ASPECT_RATIO = '1:1'
-const SIZE = '1024x1024'
-
 // Central config for the cost analysis benchmark.
 // Edit this file to change the prompt, aspect ratio, and other defaults.
 export const config = {
   // Standard prompt used to test all models.
   // Keep it consistent across runs so cost comparisons are meaningful.
-  prompt: `A photorealistic image of a golden retriever puppy sitting in a sunflower field at golden hour, with a soft bokeh background and warm light. Aspect ratio: ${ASPECT_RATIO}, size: ${SIZE}.`,
+  prompt:
+    'A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.',
 
-  // Number of images to generate per model (where supported).
-  n: 1,
+  // Aspect ratio for video models that support it.
+  aspectRatio: '16:9',
 
-  // Aspect ratio for generateImage models that support it (e.g. xAI).
-  // xAI models only support aspectRatio, not size.
-  aspectRatio: ASPECT_RATIO,
+  // Resolution for video models that accept the `resolution` parameter.
+  // Per-model overrides may use different formats (e.g. Veo expects '720p').
+  resolution: '1280x720',
 
-  // Size for generateImage models that use the `size` param (e.g. Recraft, OpenAI).
-  size: SIZE,
+  // Duration in seconds. Per-model overrides apply where the global value
+  // is not in the model's allowed set (e.g. Veo accepts only 4/6/8).
+  duration: 5,
 
   // Delay in ms between model requests to avoid rate limiting.
-  delayBetweenRequestsMs: 1000,
+  delayBetweenRequestsMs: 2000,
 
-  // Directory for saved images.
-  outputDir: "./results/images",
-
-  // Directory for image thumbnails (used in the Markdown report).
-  thumbnailDir: "./results/images/thumbnails",
+  // Directory for saved videos.
+  outputDir: './results/videos',
 
   // Directory for generated chart PNGs (cost, latency).
-  chartsDir: "./results/images/charts",
+  chartsDir: './results/videos/charts',
 
   // Path for the generated Markdown report.
-  reportPath: "./results/report.md",
-};
+  reportPath: './results/report.md',
+}
