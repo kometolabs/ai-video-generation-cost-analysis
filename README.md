@@ -23,9 +23,11 @@ Latest run - see the full table with per-model videos in [results/report.md](./r
 
 Full list in [`src/models.ts`](./src/models.ts):
 
-- `xai/grok-imagine-video` - xAI Grok Imagine Video
-- `klingai/kling-v2.6-t2v` - KlingAI Kling 2.6 (text-to-video)
+- `alibaba/wan-v2.6-t2v` - Alibaba Wan 2.6 (text-to-video)
+- `bytedance/seedance-2.0` - ByteDance Seedance 2.0
 - `google/veo-3.1-generate-001` - Google Veo 3.1
+- `klingai/kling-v3.0-t2v` - KlingAI Kling 3.0 (text-to-video)
+- `xai/grok-imagine-video` - xAI Grok Imagine Video
 
 Provider-specific quirks and workarounds are documented in [MODEL-QUIRKS.md](./MODEL-QUIRKS.md).
 
@@ -66,7 +68,7 @@ Edit [src/config.ts](./src/config.ts) to change:
 - request delay
 - output paths
 
-Edit [src/models.ts](./src/models.ts) to enable or disable models or adjust model-specific overrides (`aspectRatio`, `resolution`, `duration`, `providerOptions`, `skipResolution`).
+Edit [src/models.ts](./src/models.ts) to enable or disable models or adjust model-specific overrides (`aspectRatio`, `resolution`, `duration`, `providerOptions`, `skipResolution`, `skipAspectRatio`).
 
 ## Run
 
@@ -83,7 +85,6 @@ The CLI prints progress for each model and runs three phases:
 1. **Generation** - calls each enabled model and saves outputs to `./results/videos/`.
 2. **Report** - writes `./results/report.md` with a comparison table containing:
    - model ID
-   - provider
    - cost (gateway-reported when available)
    - latency (wall-clock seconds, measured by the client)
    - configured video duration and resolution
@@ -94,4 +95,4 @@ The CLI prints progress for each model and runs three phases:
 
 - The runner uses `result.videos[i].uint8Array` to save bytes to disk; `mediaType` provides the file extension (`.mp4` for all current models).
 - Cost metadata comes from `result.providerMetadata?.gateway?.cost`.
-- Per-provider parameter constraints (Veo `duration` in `{4,6,8}`, Kling rejecting `resolution`, etc.) are handled via per-model overrides in `src/models.ts`. See [MODEL-QUIRKS.md](./MODEL-QUIRKS.md) for the full list.
+- Per-provider parameter constraints (Veo `duration` in `{4,6,8}`, Kling rejecting `resolution`, Wan rejecting `aspectRatio`, etc.) are handled via per-model overrides in `src/models.ts`. See [MODEL-QUIRKS.md](./MODEL-QUIRKS.md) for the full list.
