@@ -25,7 +25,7 @@ export async function writeReport(prompt: string, results: RunResult[], reportPa
     let video = '-'
     if (r.savedVideos[0]) {
       const src = toRel(r.savedVideos[0])
-      video = `<video src="${src}" controls width="320"></video>`
+      video = `[${path.basename(src)}](${src})`
     }
 
     return `| ${model} | ${price} | ${latency} | ${video} |`
@@ -51,7 +51,7 @@ export async function writeReport(prompt: string, results: RunResult[], reportPa
     ``,
     `_Latency is wall time per video, measured by the benchmark script._${br}`,
     `_Cost is returned by the gateway, so it should be accurate._${br}`,
-    `_Videos are embedded as HTML5 \`<video>\` tags - GitHub renders them inline._`,
+    `_Click a filename to download the \`.mp4\`. GitHub does not play repo-local videos inline._`,
   ].join('\n')
 
   await Bun.write(reportPath, md)
