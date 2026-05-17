@@ -78,6 +78,8 @@ bun start
 
 > Each video generation call can take 1-10+ minutes. The benchmark uses a custom gateway in [`src/gateway.ts`](./src/gateway.ts) with an extended 15-minute Undici `Agent` timeout to keep long fetches alive. Expect a full run to cost a few USD - check provider pricing before running.
 
+> Models are called sequentially with a deliberate 65-second delay between requests (`delayBetweenRequestsMs` in [src/config.ts](./src/config.ts)). KlingAI on the Vercel AI Gateway enforces a 1 request/minute quota for accounts with balances below $100 - waiting > 60s between calls keeps multi-model runs from tripping that quota. See [MODEL-QUIRKS.md](./MODEL-QUIRKS.md) for details.
+
 ## Output
 
 The CLI prints progress for each model and runs three phases:
