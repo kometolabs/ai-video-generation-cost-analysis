@@ -94,6 +94,7 @@ The CLI prints progress for each model and runs three phases:
 
 ## Notes
 
+- All models are generating video with audio, but for some models it needs to be set explicitly.
 - The runner uses `result.videos[i].uint8Array` to save bytes to disk; `mediaType` provides the file extension (`.mp4` for all current models).
 - Cost metadata comes from `result.providerMetadata?.gateway?.cost`.
 - Per-provider parameter constraints (Veo `duration` in `{4,6,8}`, Kling rejecting `resolution`, Wan rejecting `aspectRatio`, etc.) are handled via per-model overrides in `src/models.ts`. See [MODEL-QUIRKS.md](./MODEL-QUIRKS.md) for the full list.
