@@ -20,11 +20,12 @@ export async function writeReport(prompt: string, results: RunResult[], reportPa
 
   const rows = results.map((r) => {
     const model = `\`${r.model.id}\``
-    const provider = r.model.provider
     const price = formatPrice(r.cost)
     const latency = r.success ? `${(r.wallLatencyMs / 1000).toFixed(1)}s` : 'FAILED'
     const duration = `${r.model.duration ?? config.duration}s`
-    const resolution = r.model.skipResolution ? `(${r.model.aspectRatio ?? config.aspectRatio})` : (r.model.resolution ?? config.resolution)
+    const resolution = r.model.skipResolution
+      ? `(${r.model.aspectRatio ?? config.aspectRatio})`
+      : (r.model.resolution ?? config.resolution)
 
     let video = '-'
     if (r.savedVideos[0]) {
@@ -32,7 +33,7 @@ export async function writeReport(prompt: string, results: RunResult[], reportPa
       video = `<video src="${src}" controls width="320"></video>`
     }
 
-    return `| ${model} | ${provider} | ${price} | ${latency} | ${duration} | ${resolution} | ${video} |`
+    return `| ${model} | ${price} | ${latency} | ${duration} | ${resolution} | ${video} |`
   })
 
   const totalCost = results.reduce((sum, r) => sum + (r.cost != null ? parseFloat(r.cost) : 0), 0)
@@ -47,8 +48,8 @@ export async function writeReport(prompt: string, results: RunResult[], reportPa
     `**Run:** ${new Date().toISOString()}${br}`,
     `**Prompt:** ${prompt}`,
     ``,
-    `| Model | Provider | Cost | Latency | Duration | Resolution | Video |`,
-    `| ----- | -------- | ---- | ------- | -------- | ---------- | ----- |`,
+    `| Model | Cost | Latency | Duration | Resolution | Video |`,
+    `| ----- | ---- | ------- | -------- | ---------- | ----- |`,
     ...rows,
     ``,
     `**Total spent:** ${totalCostStr}`,

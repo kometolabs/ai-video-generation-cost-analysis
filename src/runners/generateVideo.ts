@@ -30,7 +30,9 @@ export async function runGenerateVideo(
     const callArgs: Parameters<typeof generateVideo>[0] = {
       model: gateway.video(model.id),
       prompt,
-      aspectRatio: (model.aspectRatio ?? opts.defaults.aspectRatio) as Parameters<typeof generateVideo>[0]['aspectRatio'],
+      aspectRatio: (model.aspectRatio ?? opts.defaults.aspectRatio) as Parameters<
+        typeof generateVideo
+      >[0]['aspectRatio'],
       duration: model.duration ?? opts.defaults.duration,
     }
 

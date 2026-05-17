@@ -18,7 +18,9 @@ export const config = {
   duration: 5,
 
   // Delay in ms between model requests to avoid rate limiting.
-  delayBetweenRequestsMs: 2000,
+  // KlingAI on the Vercel AI Gateway enforces 1 request/minute for balances < $100,
+  // so we wait > 60s to keep multi-model runs from tripping that quota.
+  delayBetweenRequestsMs: 65000,
 
   // Directory for saved videos.
   outputDir: './results/videos',

@@ -42,7 +42,7 @@ for (const model of allModels) {
     const cost = result.cost != null ? ` $${result.cost}` : ''
     console.log(`OK ${(result.wallLatencyMs / 1000).toFixed(2)}s*, ${result.videoCount} video(s)${cost}`)
   } else {
-    console.log(`FAILED: ${result.error?.slice(0, 70)}`)
+    console.log(`FAILED: ${result.error}`)
   }
 
   results.push(result)

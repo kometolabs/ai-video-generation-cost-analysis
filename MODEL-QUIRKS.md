@@ -50,6 +50,13 @@ Documented workarounds for non-standard behavior across video generation provide
 
 ---
 
+**Quirk:** Vercel AI Gateway enforces a 1 request/minute quota for KlingAI on accounts with balances below $100. The built-in 3-attempt retry burns all attempts inside the same minute and surfaces:
+`Failed after 3 attempts. Last error: Video generation has a quota of 1 request per minute for balances below $100.`
+
+**Adaptation:** None in code - either top up Gateway credits past $100 or space runs > 60s apart manually.
+
+---
+
 ## xAI Grok Imagine Video
 
 **Quirk:** 720p ceiling. Requesting higher resolutions silently downscales or errors depending on the path.

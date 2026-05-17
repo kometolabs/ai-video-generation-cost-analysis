@@ -28,7 +28,7 @@ const FONT = 'Inter, sans-serif'
 const BG = '#ffffff'
 
 // Parses the Markdown comparison table from report.md.
-// Expects rows shaped as: | `model/id` | Provider | $price | latencys | Xs | resolution | video |
+// Expects rows shaped as: | `model/id` | $price | latencys | Xs | resolution | video |
 // Failed rows (latency = "FAILED") and rows without a numeric price are dropped.
 function parseReport(md: string): ReportRow[] {
   const rows = md
@@ -43,8 +43,8 @@ function parseReport(md: string): ReportRow[] {
         .map((c) => c.trim())
         .filter(Boolean)
       const model = cols[0]?.replace(/`/g, '') ?? ''
-      const price = parseFloat((cols[2] ?? '').replace('$', ''))
-      const latency = parseFloat((cols[3] ?? '').replace('s', ''))
+      const price = parseFloat((cols[1] ?? '').replace('$', ''))
+      const latency = parseFloat((cols[2] ?? '').replace('s', ''))
       return { model, price, latency }
     })
     .filter((r) => r.model && Number.isFinite(r.price) && Number.isFinite(r.latency))
