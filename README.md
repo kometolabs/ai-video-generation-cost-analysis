@@ -1,6 +1,6 @@
 # AI Video Generation Cost Analysis
 
-Benchmark text-to-video models behind Vercel AI Gateway, save the generated videos, and produce a Markdown report with cost and latency per model.
+Benchmark text-to-video models behind Vercel AI Gateway, save the generated videos, and produce a Markdown report with cost and generation time per model.
 
 ## Results
 
@@ -8,15 +8,15 @@ Latest run - see the full table with per-model videos in [results/report.md](./r
 
 [![Cost per video](./results/videos/charts/cost.png)](./results/videos/charts/cost.png)
 
-[![Latency](./results/videos/charts/latency.png)](./results/videos/charts/latency.png)
+[![Generation time](./results/videos/charts/latency.png)](./results/videos/charts/latency.png)
 
 ## What It Does
 
 - Runs multiple text-to-video models through a single CLI.
 - Uses `experimental_generateVideo` from the Vercel AI SDK (v6).
 - Saves generated `.mp4` files to `./results/videos`.
-- Renders cost and latency bar charts to `./results/videos/charts`.
-- Writes a Markdown report to `./results/report.md` with a comparison table (cost, latency, generation date, video link).
+- Renders cost and generation time bar charts to `./results/videos/charts`.
+- Writes a Markdown report to `./results/report.md` with a comparison table (cost, generation time, generation date, video link).
 - Caches per-model results in `./results/cache.json` so reruns skip already-generated models - add a new model without paying to regenerate the rest.
 - Tracks provider-reported cost when available.
 
@@ -110,12 +110,12 @@ The CLI prints progress for each model and runs three phases:
 2. **Report** - writes `./results/report.md` with a comparison table containing:
    - model ID
    - cost (gateway-reported when available)
-   - latency (wall-clock seconds, measured by the client)
+   - generation time (wall-clock seconds, measured by the client)
    - generation date (per-row `YYYY-MM-DD` - rows can come from different runs)
    - link to the saved `.mp4`
 
    The report includes every model with a cache entry, even if it's currently `enabled: false` - disabling a model skips its regeneration but keeps it in the comparison.
-3. **Charts** - renders cost and latency bar charts to `./results/videos/charts/{cost.png, latency.png}`.
+3. **Charts** - renders cost and generation time bar charts to `./results/videos/charts/{cost.png, latency.png}`.
 
 ## Notes
 

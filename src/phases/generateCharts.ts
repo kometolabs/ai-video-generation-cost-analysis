@@ -80,7 +80,7 @@ export async function generateCharts(opts: ChartOptions): Promise<string[]> {
     {
       labels: byLatency.map((d) => d.model),
       values: byLatency.map((d) => d.latency),
-      label: 'Latency (seconds)',
+      label: 'Generation time (seconds)',
       unit: '',
       color: '#10b981',
       filename: 'latency.png',
