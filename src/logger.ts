@@ -14,6 +14,17 @@ function formatDate(iso: string): string {
   return iso.slice(0, 10)
 }
 
+function summarizeDurations(values: Set<number>): string | null {
+  if (values.size === 0) return null
+  const nums = [...values].sort((a, b) => a - b)
+  return nums.length === 1 ? `${nums[0]}s` : `${nums[0]}-${nums[nums.length - 1]}s`
+}
+
+function summarizeStrings(values: Set<string>): string | null {
+  if (values.size === 0) return null
+  return [...values].sort().join(', ')
+}
+
 export async function writeReport(
   prompt: string,
   models: ModelConfig[],
@@ -52,11 +63,35 @@ export async function writeReport(
   // Trailing double-space forces a Markdown <br> between adjacent lines.
   const br = '  '
 
+  // Collect the per-model inputs that actually went into each cached run so
+  // the header reflects reality (e.g. Veo at 4s alongside others at 5s).
+  const durations = new Set<number>()
+  const resolutions = new Set<string>()
+  const aspectRatios = new Set<string>()
+  for (const model of models) {
+    const entry = cache.entries[model.id]
+    if (!entry) continue
+    durations.add(entry.inputs.duration)
+    if (entry.inputs.resolution) resolutions.add(entry.inputs.resolution)
+    if (entry.inputs.aspectRatio) aspectRatios.add(entry.inputs.aspectRatio)
+  }
+
+  const headerLines = [`**Last updated:** ${new Date().toISOString()}${br}`, `**Prompt:** ${prompt}${br}`]
+  const durationStr = summarizeDurations(durations)
+  const resolutionStr = summarizeStrings(resolutions)
+  const aspectRatioStr = summarizeStrings(aspectRatios)
+  if (durationStr) headerLines.push(`**Duration:** ${durationStr}${br}`)
+  if (resolutionStr) headerLines.push(`**Resolution:** ${resolutionStr}${br}`)
+  if (aspectRatioStr) headerLines.push(`**Aspect ratio:** ${aspectRatioStr}`)
+  // Strip the trailing `br` from whatever ended up last - the blank line below
+  // already creates the paragraph break.
+  const lastIdx = headerLines.length - 1
+  headerLines[lastIdx] = headerLines[lastIdx]!.replace(/ {2}$/, '')
+
   const md = [
     `# AI Video Model Benchmark`,
     ``,
-    `**Last updated:** ${new Date().toISOString()}${br}`,
-    `**Prompt:** ${prompt}`,
+    ...headerLines,
     ``,
     `| Model | Cost | Latency | Generated | Video |`,
     `| ----- | ---- | ------- | --------- | ----- |`,

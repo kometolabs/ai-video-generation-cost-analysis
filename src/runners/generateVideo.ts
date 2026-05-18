@@ -28,7 +28,7 @@ export async function runGenerateVideo(
 
   try {
     const callArgs: Parameters<typeof generateVideo>[0] = {
-      model: gateway.video(model.id),
+      model: gateway.video(model.gatewayId ?? model.id),
       prompt,
       duration: model.duration ?? opts.defaults.duration,
     }

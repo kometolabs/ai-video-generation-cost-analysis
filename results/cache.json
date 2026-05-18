@@ -83,6 +83,139 @@
         "resolution": "1280x720",
         "aspectRatio": "16:9"
       }
+    },
+    "alibaba/wan-v2.5-t2v-preview": {
+      "modelId": "alibaba/wan-v2.5-t2v-preview",
+      "modelName": "Wan v2.5 T2V (preview)",
+      "provider": "Alibaba",
+      "success": true,
+      "wallLatencyMs": 115287,
+      "videoPath": "videos/alibaba-wan-v2.5-t2v-preview.mp4",
+      "mediaType": "video/mp4",
+      "cost": "0.5",
+      "generatedAt": "2026-05-18T14:46:25.769Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
+        "resolution": "1280x720"
+      }
+    },
+    "bytedance/seedance-v1.0-lite-t2v": {
+      "modelId": "bytedance/seedance-v1.0-lite-t2v",
+      "modelName": "Seedance v1.0 Lite T2V",
+      "provider": "ByteDance",
+      "success": false,
+      "error": "The model or endpoint seedance-1-0-lite-t2v-250428 does not exist or you do not have access to it. Request id: 021779116401501c5f50319cb4d4388d7836967b82aebe5e5e9db",
+      "wallLatencyMs": 1046,
+      "generatedAt": "2026-05-18T15:00:01.830Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
+        "resolution": "1280x720",
+        "aspectRatio": "16:9"
+      }
+    },
+    "bytedance/seedance-v1.0-pro": {
+      "modelId": "bytedance/seedance-v1.0-pro",
+      "modelName": "Seedance v1.0 Pro",
+      "provider": "ByteDance",
+      "success": true,
+      "wallLatencyMs": 52999,
+      "videoPath": "videos/bytedance-seedance-v1.0-pro.mp4",
+      "mediaType": "video/mp4",
+      "cost": "0.2575",
+      "generatedAt": "2026-05-18T14:49:29.676Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
+        "resolution": "1280x720",
+        "aspectRatio": "16:9"
+      }
+    },
+    "bytedance/seedance-v1.0-pro-fast": {
+      "modelId": "bytedance/seedance-v1.0-pro-fast",
+      "modelName": "Seedance v1.0 Pro Fast",
+      "provider": "ByteDance",
+      "success": true,
+      "wallLatencyMs": 44269,
+      "videoPath": "videos/bytedance-seedance-v1.0-pro-fast.mp4",
+      "mediaType": "video/mp4",
+      "cost": "0.103",
+      "generatedAt": "2026-05-18T14:51:18.989Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
+        "resolution": "1280x720",
+        "aspectRatio": "16:9"
+      }
+    },
+    "bytedance/seedance-v1.5-pro": {
+      "modelId": "bytedance/seedance-v1.5-pro",
+      "modelName": "Seedance v1.5 Pro",
+      "provider": "ByteDance",
+      "success": true,
+      "wallLatencyMs": 73890,
+      "videoPath": "videos/bytedance-seedance-v1.5-pro.mp4",
+      "mediaType": "video/mp4",
+      "cost": "0.1295",
+      "generatedAt": "2026-05-18T14:53:37.898Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
+        "resolution": "1280x720",
+        "aspectRatio": "16:9"
+      }
+    },
+    "bytedance/seedance-2.0-fast": {
+      "modelId": "bytedance/seedance-2.0-fast",
+      "modelName": "Seedance 2.0 Fast",
+      "provider": "ByteDance",
+      "success": true,
+      "wallLatencyMs": 117941,
+      "videoPath": "videos/bytedance-seedance-2.0-fast.mp4",
+      "mediaType": "video/mp4",
+      "cost": "0.60984",
+      "generatedAt": "2026-05-18T14:56:40.876Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
+        "resolution": "1280x720",
+        "aspectRatio": "16:9"
+      }
+    },
+    "google/veo-3.0-generate-001": {
+      "modelId": "google/veo-3.0-generate-001",
+      "modelName": "Veo 3.0",
+      "provider": "Google",
+      "success": true,
+      "wallLatencyMs": 85072,
+      "videoPath": "videos/google-veo-3.0-generate-001.mp4",
+      "mediaType": "video/mp4",
+      "cost": "1.6",
+      "generatedAt": "2026-05-18T14:59:11.198Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 4,
+        "resolution": "720p",
+        "aspectRatio": "16:9"
+      }
+    },
+    "google/veo-3.0-fast-generate-001": {
+      "modelId": "google/veo-3.0-fast-generate-001",
+      "modelName": "Veo 3.0 Fast",
+      "provider": "Google",
+      "success": true,
+      "wallLatencyMs": 64131,
+      "videoPath": "videos/google-veo-3.0-fast-generate-001.mp4",
+      "mediaType": "video/mp4",
+      "cost": "0.6",
+      "generatedAt": "2026-05-18T15:02:11.204Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 4,
+        "resolution": "720p",
+        "aspectRatio": "16:9"
+      }
     }
   }
 }

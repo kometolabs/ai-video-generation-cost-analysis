@@ -1,6 +1,6 @@
 # AI Video Model Benchmark
 
-**Last updated:** 2026-05-18T14:28:40.483Z  
+**Last updated:** 2026-05-18T14:34:48.099Z  
 **Prompt:** A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.
 
 | Model | Cost | Latency | Generated | Video |

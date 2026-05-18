@@ -1,7 +1,14 @@
 import type { JSONValue } from 'ai'
 
 export interface ModelConfig {
-  id: string // Vercel AI Gateway model ID (e.g. 'klingai/kling-v2.6-t2v')
+  // Unique benchmark id - also used as the cache key, filename slug, and label.
+  // For most models this matches the gateway id verbatim. For mode variants
+  // (e.g. Kling Pro alongside Std) give each variant a distinct id and set
+  // `gatewayId` to the shared underlying model.
+  id: string
+  // Vercel AI Gateway model id (e.g. 'klingai/kling-v3.0-t2v'). Defaults to
+  // `id` when omitted.
+  gatewayId?: string
   name: string // Human-readable name
   provider: string // Provider display name
   notes?: string
