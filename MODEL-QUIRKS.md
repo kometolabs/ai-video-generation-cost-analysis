@@ -61,9 +61,19 @@ Applies to all Kling variants: `klingai/kling-v2.5-turbo-t2v`, `klingai/kling-v2
 
 ---
 
-**Quirk:** Audio is opt-in via `providerOptions.klingai.sound` (a string, `'on'` or `'off'`, not a boolean). Defaults to `'off'`, so output is silent unless explicitly enabled. Requires v2.6+ and adds ~50% to the per-second cost (v3.0 std: $0.168/s → $0.252/s). The internal gateway pricing JSON uses `audio: true/false`, but the SDK field is `sound`.
+**Quirk:** Audio (`providerOptions.klingai.sound`, a string `'on'` or `'off'`, not a boolean) is only supported on a subset of Kling models. Setting `sound: 'on'` elsewhere returns `model/mode(...) is not supported with sound on ...`.
 
-**Adaptation:** `providerOptions: { klingai: { sound: 'on' } }` on each Kling entry.
+Support matrix:
+
+| Model               | std `sound:'on'` | pro `sound:'on'` |
+| ------------------- | ---------------- | ---------------- |
+| Kling v2.5 Turbo    | unsupported      | unsupported      |
+| Kling v2.6          | unsupported      | supported        |
+| Kling v3.0          | supported        | supported        |
+
+Where supported, audio adds ~50% to the per-second cost (v3.0 std: $0.168/s → $0.252/s). The internal gateway pricing JSON uses `audio: true/false`, but the SDK field is `sound`.
+
+**Adaptation:** Set `providerOptions: { klingai: { sound: 'on' } }` only on Kling v2.6 pro and Kling v3.0 (either mode). Omit `sound` entirely on the other Kling entries.
 
 ---
 

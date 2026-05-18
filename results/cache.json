@@ -105,9 +105,9 @@
       "modelName": "Seedance v1.0 Lite T2V",
       "provider": "ByteDance",
       "success": false,
-      "error": "The model or endpoint seedance-1-0-lite-t2v-250428 does not exist or you do not have access to it. Request id: 021779116401501c5f50319cb4d4388d7836967b82aebe5e5e9db",
-      "wallLatencyMs": 1046,
-      "generatedAt": "2026-05-18T15:00:01.830Z",
+      "error": "The model or endpoint seedance-1-0-lite-t2v-250428 does not exist or you do not have access to it. Request id: 0217791167322094288fe53d7c9130f34413480585e68368fb6fa",
+      "wallLatencyMs": 1038,
+      "generatedAt": "2026-05-18T15:05:32.406Z",
       "inputs": {
         "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
         "duration": 5,
@@ -214,6 +214,101 @@
         "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
         "duration": 4,
         "resolution": "720p",
+        "aspectRatio": "16:9"
+      }
+    },
+    "google/veo-3.1-fast-generate-001": {
+      "modelId": "google/veo-3.1-fast-generate-001",
+      "modelName": "Veo 3.1 Fast",
+      "provider": "Google",
+      "success": true,
+      "wallLatencyMs": 65598,
+      "videoPath": "videos/google-veo-3.1-fast-generate-001.mp4",
+      "mediaType": "video/mp4",
+      "cost": "0.6",
+      "generatedAt": "2026-05-18T15:07:43.352Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 4,
+        "resolution": "720p",
+        "aspectRatio": "16:9"
+      }
+    },
+    "klingai/kling-v2.5-turbo-t2v": {
+      "modelId": "klingai/kling-v2.5-turbo-t2v",
+      "modelName": "Kling v2.5 Turbo T2V (std)",
+      "provider": "KlingAI",
+      "success": true,
+      "wallLatencyMs": 47809,
+      "videoPath": "videos/klingai-kling-v2.5-turbo-t2v.mp4",
+      "mediaType": "video/mp4",
+      "cost": "0.211722",
+      "generatedAt": "2026-05-18T15:09:36.190Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
+        "aspectRatio": "16:9"
+      }
+    },
+    "klingai/kling-v2.5-turbo-t2v-pro": {
+      "modelId": "klingai/kling-v2.5-turbo-t2v-pro",
+      "modelName": "Kling v2.5 Turbo T2V (pro)",
+      "provider": "KlingAI",
+      "success": true,
+      "wallLatencyMs": 81480,
+      "videoPath": "videos/klingai-kling-v2.5-turbo-t2v-pro.mp4",
+      "mediaType": "video/mp4",
+      "cost": "0.35287",
+      "generatedAt": "2026-05-18T15:12:02.706Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
+        "aspectRatio": "16:9"
+      }
+    },
+    "klingai/kling-v2.6-t2v": {
+      "modelId": "klingai/kling-v2.6-t2v",
+      "modelName": "Kling v2.6 T2V (std)",
+      "provider": "KlingAI",
+      "success": false,
+      "error": "model/mode(kling-v2-6/std) is not supported with sound on in standard mode",
+      "wallLatencyMs": 496,
+      "generatedAt": "2026-05-18T15:13:08.204Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
+        "aspectRatio": "16:9"
+      }
+    },
+    "klingai/kling-v2.6-t2v-pro": {
+      "modelId": "klingai/kling-v2.6-t2v-pro",
+      "modelName": "Kling v2.6 T2V (pro)",
+      "provider": "KlingAI",
+      "success": true,
+      "wallLatencyMs": 90935,
+      "videoPath": "videos/klingai-kling-v2.6-t2v-pro.mp4",
+      "mediaType": "video/mp4",
+      "cost": "0.70574",
+      "generatedAt": "2026-05-18T15:15:44.165Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
+        "aspectRatio": "16:9"
+      }
+    },
+    "klingai/kling-v3.0-t2v-pro": {
+      "modelId": "klingai/kling-v3.0-t2v-pro",
+      "modelName": "Kling v3.0 T2V (pro)",
+      "provider": "KlingAI",
+      "success": true,
+      "wallLatencyMs": 82954,
+      "videoPath": "videos/klingai-kling-v3.0-t2v-pro.mp4",
+      "mediaType": "video/mp4",
+      "cost": "1.693776",
+      "generatedAt": "2026-05-18T15:18:12.140Z",
+      "inputs": {
+        "prompt": "A golden retriever puppy chasing a butterfly through a sunflower field at golden hour, cinematic shallow depth of field, soft warm light, slow camera dolly forward.",
+        "duration": 5,
         "aspectRatio": "16:9"
       }
     }
