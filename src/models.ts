@@ -59,4 +59,9 @@ const models: ModelConfig[] = [
   },
 ]
 
+// Every declared model (enabled or not). Used when seeding the runs DB from
+// an existing report, so historical entries are matched even if their model
+// is currently disabled.
+export const declaredModels: ModelConfig[] = models
+
 export const allModels: ModelConfig[] = models.filter((m) => m.enabled)

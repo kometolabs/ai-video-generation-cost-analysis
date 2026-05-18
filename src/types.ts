@@ -33,3 +33,34 @@ export interface RunResult {
   mediaType?: string // e.g. 'video/mp4'
   cost?: string // Total cost in USD
 }
+
+// Inputs that determine whether a cached result is still valid for a model.
+// When any of these change between runs, the cache entry is treated as stale
+// and the model is re-generated.
+export interface RunInputs {
+  prompt: string
+  duration: number
+  resolution?: string
+  aspectRatio?: string
+}
+
+// One cached entry per model in results/cache.json. Holds enough to render the
+// report and decide whether to re-run.
+export interface RunEntry {
+  modelId: string
+  modelName: string
+  provider: string
+  success: boolean
+  error?: string
+  wallLatencyMs: number
+  videoPath?: string
+  mediaType?: string
+  cost?: string
+  generatedAt: string // ISO timestamp
+  inputs: RunInputs
+}
+
+export interface RunCache {
+  version: 1
+  entries: Record<string, RunEntry>
+}

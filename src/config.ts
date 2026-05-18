@@ -30,4 +30,8 @@ export const config = {
 
   // Path for the generated Markdown report.
   reportPath: './results/report.md',
+
+  // Path for the persistent JSON cache of per-model run results.
+  // Lets reruns skip models already generated for the current inputs.
+  cachePath: './results/cache.json',
 }
