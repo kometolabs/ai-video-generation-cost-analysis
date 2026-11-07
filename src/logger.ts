@@ -1,4 +1,6 @@
+import fs from 'node:fs'
 import path from 'node:path'
+import { probeVideo } from './probe.js'
 import type { ModelConfig, RunCache } from './types.js'
 
 function formatPrice(cost?: string): string {
@@ -43,7 +45,7 @@ export async function writeReport(
     const id = `\`${model.id}\``
 
     if (!entry) {
-      return `| ${id} | - | - | - | - |`
+      return `| ${id} | - | - | - | - | - | - | - |`
     }
 
     const price = formatPrice(entry.cost)
@@ -51,7 +53,16 @@ export async function writeReport(
     const generated = formatDate(entry.generatedAt)
     const video = entry.videoPath ? `[video](${toRel(entry.videoPath)})` : '-'
 
-    return `| ${id} | ${price} | ${latency} | ${generated} | ${video} |`
+    // Actual output specs, measured from the saved file. The requested settings
+    // live in entry.inputs, but providers don't always honor them.
+    const probe = entry.videoPath && fs.existsSync(entry.videoPath) ? probeVideo(entry.videoPath) : null
+    const duration = probe?.durationSec != null ? `${probe.durationSec.toFixed(1)}s` : '-'
+    const resolution = probe?.width && probe?.height ? `${probe.width}x${probe.height}` : '-'
+    const audio = probe ? (probe.hasAudio ? 'yes' : 'no') : '-'
+
+    // Keep Model | Cost | Generation time | Generated as the first four columns:
+    // generateCharts and seedFromReport parse them by position.
+    return `| ${id} | ${price} | ${latency} | ${generated} | ${duration} | ${resolution} | ${audio} | ${video} |`
   })
 
   const totalCost = models.reduce((sum, model) => {
@@ -93,15 +104,17 @@ export async function writeReport(
     ``,
     ...headerLines,
     ``,
-    `| Model | Cost | Generation time | Generated | Video |`,
-    `| ----- | ---- | --------------- | --------- | ----- |`,
+    `| Model | Cost | Generation time | Generated | Duration | Resolution | Audio | Video |`,
+    `| ----- | ---- | --------------- | --------- | -------- | ---------- | ----- | ----- |`,
     ...rows,
     ``,
     `**Total spent:** ${totalCostStr}`,
     ``,
+    `_Each model generated one video, so each generation time is a single measurement._${br}`,
     `_Generation time is wall time per video, measured by the benchmark script._${br}`,
     `_Cost is returned by the gateway, so it should be accurate._${br}`,
     `_Generated is the date each row's video was produced - rows may be from different runs (cache hits aren't re-generated)._${br}`,
+    `_Duration, Resolution and Audio are measured from each saved video with ffprobe, not taken from the requested settings. Costs are only like-for-like between rows where these match._${br}`,
     `_Click "video" to download the \`.mp4\`. GitHub does not play repo-local videos inline._`,
   ].join('\n')
 

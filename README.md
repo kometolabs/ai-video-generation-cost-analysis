@@ -37,6 +37,7 @@ Provider-specific quirks (Veo audio/duration constraints, Kling resolution rejec
 ## Requirements
 
 - [Bun](https://bun.sh)
+- [ffprobe](https://ffmpeg.org/ffprobe.html) (part of FFmpeg), optional - used to measure each video's actual duration, resolution and audio for the report. Without it, those columns show `-`.
 
 ## Install
 
@@ -82,6 +83,7 @@ bun start                              # cached: skip every model with a valid c
 bun start --force                      # ignore cache, regenerate every enabled model
 bun start --only klingai/kling-v3.0-t2v,xai/grok-imagine-video
                                        # regenerate only the listed ids (others stay cached)
+bun start --report-only                # no generation: rebuild report and charts from the cache
 ```
 
 `--regenerate-all` is accepted as an alias for `--force`.
@@ -112,6 +114,7 @@ The CLI prints progress for each model and runs three phases:
    - cost (gateway-reported when available)
    - generation time (wall-clock seconds, measured by the client)
    - generation date (per-row `YYYY-MM-DD` - rows can come from different runs)
+   - actual duration, resolution and audio, measured from the saved file with ffprobe (providers don't always honor the requested settings)
    - link to the saved `.mp4`
 
    The report includes every model with a cache entry, even if it's currently `enabled: false` - disabling a model skips its regeneration but keeps it in the comparison.

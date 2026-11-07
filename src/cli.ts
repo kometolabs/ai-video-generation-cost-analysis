@@ -1,13 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import {
-  effectiveInputs,
-  inputsMatch,
-  loadCache,
-  saveCache,
-  seedFromReport,
-  toRunEntry,
-} from './cache.js'
+import { effectiveInputs, inputsMatch, loadCache, saveCache, seedFromReport, toRunEntry } from './cache.js'
 import { config } from './config.js'
 import { writeReport } from './logger.js'
 import { allModels, declaredModels } from './models.js'
@@ -15,19 +8,16 @@ import { generateCharts } from './phases/generateCharts.js'
 import { runGenerateVideo } from './runners/generateVideo.js'
 import type { ModelConfig, RunInputs } from './types.js'
 
-if (!process.env['AI_GATEWAY_API_KEY']) {
-  console.error('Error: AI_GATEWAY_API_KEY is not set.')
-  process.exit(1)
-}
-
 // Minimal arg parser - the surface is small enough that pulling in a lib
 // isn't worth it.
 //
 //   bun start                                      # default: skip cached models
 //   bun start --force                              # re-run every enabled model
 //   bun start --only alibaba/wan-v2.6-t2v,xai/...  # re-run only the listed ids
-function parseArgs(argv: string[]): { forceAll: boolean; only: Set<string> | null } {
+//   bun start --report-only                        # rebuild report + charts from cache, no API calls
+function parseArgs(argv: string[]): { forceAll: boolean; only: Set<string> | null; reportOnly: boolean } {
   const forceAll = argv.includes('--force') || argv.includes('--regenerate-all')
+  const reportOnly = argv.includes('--report-only')
 
   let onlyRaw: string | undefined
   for (let i = 0; i < argv.length; i++) {
@@ -44,10 +34,16 @@ function parseArgs(argv: string[]): { forceAll: boolean; only: Set<string> | nul
       )
     : null
 
-  return { forceAll, only }
+  return { forceAll, only, reportOnly }
 }
 
-const { forceAll, only } = parseArgs(process.argv.slice(2))
+const { forceAll, only, reportOnly } = parseArgs(process.argv.slice(2))
+
+// The API key is only needed when we actually call the gateway.
+if (!reportOnly && !process.env['AI_GATEWAY_API_KEY']) {
+  console.error('Error: AI_GATEWAY_API_KEY is not set.')
+  process.exit(1)
+}
 
 const outputDir = path.resolve(config.outputDir)
 const chartsDir = path.resolve(config.chartsDir)
@@ -80,6 +76,7 @@ if (Object.keys(cache.entries).length === 0 && fs.existsSync(reportPath)) {
 }
 
 function shouldRun(model: ModelConfig, current: RunInputs): boolean {
+  if (reportOnly) return false
   // --only takes precedence: explicit subset always runs, others skip entirely.
   if (only) return only.has(model.id)
   if (forceAll) return true
@@ -93,7 +90,8 @@ function shouldRun(model: ModelConfig, current: RunInputs): boolean {
 
 console.log(`\nPrompt: "${config.prompt.slice(0, 80)}..."`)
 console.log(`Models: ${allModels.length}`)
-if (forceAll) console.log('Mode: --force (regenerating all)')
+if (reportOnly) console.log('Mode: --report-only (no generation, rebuilding report and charts)')
+else if (forceAll) console.log('Mode: --force (regenerating all)')
 else if (only) console.log(`Mode: --only ${[...only].join(',')}`)
 else console.log('Mode: cached (skipping models with valid cache entries)')
 console.log('')
